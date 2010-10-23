@@ -3,7 +3,7 @@
       xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Community Zeitgeist</title>
+    <title>FriendZei</title>
     <style type="text/css">
     html, body {
         font-family: Tahoma, sans-serif;
