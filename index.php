@@ -3,6 +3,9 @@ require 'config.php';
 
 $session = $FB->getSession();
 $loggedIn = ($session['uid']) ? true : false;
+if (isset($_POST['fb_sig_profile_user'])) {
+    $session['uid'] = $_POST['fb_sig_profile_user'];
+}
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -132,11 +135,16 @@ $loggedIn = ($session['uid']) ? true : false;
         function topCommenters() {
             $.getJSON('topCommenters.php?json=1&uid=<?php echo $session['uid']; ?>&since=-1%20week&count=1000', function(resp) {
                 var users = "<ul>";
-                for (c in resp) {
+                for (i in resp) {
+                    if (resp[i]['count'] === 1) {
+                        commentWord = 'comment';
+                    } else {
+                        commentWord = 'comments';
+                    }
                     users = users + "<li>";
-                    users = users + "<img src=\"http://graph.facebook.com/" + resp[c]['uid'] + "/picture\"></img>";
-                    users = users + resp[c]['name'];
-                    users = users + ": " + resp[c]['count'] + " comment(s).";
+                    users = users + "<img src=\"http://graph.facebook.com/" + resp[i]['uid'] + "/picture\"></img>";
+                    users = users + resp[i]['name'];
+                    users = users + ": " + resp[i]['count'] + " " + commentWord;
                     users = users + "</li>";
                 }
                 users = users + "</ul>";
@@ -155,7 +163,7 @@ $loggedIn = ($session['uid']) ? true : false;
             FB.Event.subscribe('auth.sessionChange', function(resp) {
                 window.location.reload();
             });
-            FB.api('/me', function(resp) {
+            FB.api('/<?php echo $session['uid']; ?>', function(resp) {
                 fillWithContent("#under-construction div.content", "Logged in as " + resp.name + "; UID: " + resp.id, true);
             });
             <?php if ($loggedIn) { ?>
@@ -166,3 +174,4 @@ $loggedIn = ($session['uid']) ? true : false;
     </div>
 </body>
 </html>
+

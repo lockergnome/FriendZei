@@ -25,7 +25,18 @@ function topCommenters($uid, $since, $count) {
         }
     }
 
-    sort($usersCount, SORT_NUMERIC);
+    sort($usersCount);
+
+    $c = count($usersCount) - 1;
+    for ($i = 0; $i <= $c; $i++) {
+        for ($j = $c; $j > $i; $j--) {
+            if ($usersCount[$j - 1]['count'] < $usersCount[$j]['count']) {
+                $tmp = $usersCount[$j - 1];
+                $usersCount[$j - 1] = $usersCount[$j];
+                $usersCount[$j] = $tmp;
+            }
+        }
+    }
 
     return json_encode($usersCount);
 }
@@ -34,3 +45,4 @@ if ($_GET['json'] == 1) {
     header('Content-type: application/json');
     echo topCommenters($_GET['uid'], $_GET['since'], $_GET['count']);
 }
+
